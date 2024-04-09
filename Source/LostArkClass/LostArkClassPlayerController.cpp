@@ -21,6 +21,7 @@ ALostArkClassPlayerController::ALostArkClassPlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
+	isActiveSkill = false;
 }
 
 void ALostArkClassPlayerController::BeginPlay()
@@ -28,10 +29,23 @@ void ALostArkClassPlayerController::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	isActiveSkill = false;
+
 	//Add Input Mapping Context
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+
+	int count = static_cast<int>(ESkillIndex::Count);
+	for (int i = 0; i < count; i++)
+	{
+		ABaseSkill* NewSkill = GetWorld()->SpawnActor<ABaseSkill>(*AllSkills[i]);
+		if (NewSkill)
+		{
+			ESkillIndex key = static_cast<ESkillIndex>(i);
+			SelectedSkills.Add(key, NewSkill);
+		}
 	}
 }
 
@@ -54,6 +68,19 @@ void ALostArkClassPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Triggered, this, &ALostArkClassPlayerController::OnTouchTriggered);
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Completed, this, &ALostArkClassPlayerController::OnTouchReleased);
 		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &ALostArkClassPlayerController::OnTouchReleased);
+
+		// Skill
+		EnhancedInputComponent->BindAction(SetActionSkill_Q, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_Q);
+		EnhancedInputComponent->BindAction(SetActionSkill_W, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_W);
+		EnhancedInputComponent->BindAction(SetActionSkill_E, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_E);
+		EnhancedInputComponent->BindAction(SetActionSkill_R, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_R);
+		EnhancedInputComponent->BindAction(SetActionSkill_A, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_A);
+		EnhancedInputComponent->BindAction(SetActionSkill_S, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_S);
+		EnhancedInputComponent->BindAction(SetActionSkill_D, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_D);
+		EnhancedInputComponent->BindAction(SetActionSkill_F, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseSkill_F);
+
+		// Attack
+		EnhancedInputComponent->BindAction(SetActionAttack, ETriggerEvent::Started, this, &ALostArkClassPlayerController::ActiveAttack);
 	}
 	else
 	{
@@ -64,6 +91,12 @@ void ALostArkClassPlayerController::SetupInputComponent()
 void ALostArkClassPlayerController::OnInputStarted()
 {
 	StopMovement();
+	if (isActiveSkill)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ddddddddddddddd"));
+		EndSkill.Execute();
+		isActiveSkill = false;
+	}
 }
 
 // Triggered every frame when the input is held down
@@ -124,3 +157,96 @@ void ALostArkClassPlayerController::OnTouchReleased()
 	bIsTouch = false;
 	OnSetDestinationReleased();
 }
+
+void ALostArkClassPlayerController::UseSkill_Q()
+{
+	if (SelectedSkills.Contains(ESkillIndex::Q)) 
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::Q];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_W()
+{
+	if (SelectedSkills.Contains(ESkillIndex::W))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::W];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_E()
+{
+	if (SelectedSkills.Contains(ESkillIndex::E))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::E];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_R()
+{
+	if (SelectedSkills.Contains(ESkillIndex::R))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::R];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_A()
+{
+	if (SelectedSkills.Contains(ESkillIndex::A))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::A];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_S()
+{
+	if (SelectedSkills.Contains(ESkillIndex::S))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::S];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_D()
+{
+	if (SelectedSkills.Contains(ESkillIndex::D))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::D];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+void ALostArkClassPlayerController::UseSkill_F()
+{
+	if (SelectedSkills.Contains(ESkillIndex::F))
+	{
+		ABaseSkill* skill = SelectedSkills[ESkillIndex::F];
+		skill->UseSkill(GetPawn());
+		SetCurSkill(skill);
+	}
+}
+
+void ALostArkClassPlayerController::SetCurSkill(ABaseSkill* CurSkill)
+{
+	previousSkill = currentSkill;
+	currentSkill = CurSkill;
+	isActiveSkill = true;
+}
+
+void ALostArkClassPlayerController::ActiveAttack()
+{
+	if (isActiveSkill)
+	{
+		isActiveSkill = ActiveSkill.Execute();
+	}
+	else
+	{
+		// 기본 공격
+	}
+}
+

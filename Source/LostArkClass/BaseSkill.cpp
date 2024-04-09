@@ -2,6 +2,7 @@
 
 
 #include "BaseSkill.h"
+#include "LostArkClassPlayerController.h"
 
 // Sets default values
 ABaseSkill::ABaseSkill()
@@ -15,7 +16,9 @@ ABaseSkill::ABaseSkill()
 void ABaseSkill::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	IsReady = true;
+	// PlayerController 가져오기
+	PlayerController = Cast<ALostArkClassPlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 void ABaseSkill::UseSkill(APawn* Player)
@@ -26,6 +29,11 @@ void ABaseSkill::UseSkill(APawn* Player)
 void ABaseSkill::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (!IsReady)
+	{
+		NowCoolDown -= DeltaTime;
+		if (NowCoolDown <= 0)
+			IsReady = true;
+	}
 }
 

@@ -16,6 +16,7 @@ class LOSTARKCLASS_API ASkill_AreaAttackBuff : public ABaseSkill
 	class UMaterialInstanceDynamic* MaterialInstance;
 	FVector ObjectImpactPoint;
 	bool InReach;
+	bool IsPlaying;
 public:
 	// Sets default values for this actor's properties
 	ASkill_AreaAttackBuff();
@@ -34,12 +35,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	// ABaseSkill을(를) 통해 상속됨
-	void UseSkill(APawn* Player) override;
+	virtual void UseSkill_Implementation() override;
 
+	bool ActiveSkill() override;
 	UFUNCTION()
-	bool ActiveSkill();
-	UFUNCTION()
-	void EndSkill();
+	void CancelSkill();
 
 	UFUNCTION()
 	void SetActive_AttackRange(bool IsActive);

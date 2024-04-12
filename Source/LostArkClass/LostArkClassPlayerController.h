@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
+#include "BaseSkill.h"
 #include "LostArkClassPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -14,7 +15,7 @@ class UInputAction;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 DECLARE_DYNAMIC_DELEGATE_RetVal(bool, FActiveSkillDeleGate);
-DECLARE_DYNAMIC_DELEGATE(FEndSkillDeleGate);
+DECLARE_DYNAMIC_DELEGATE(FSkillDeleGate);
 
 class ABaseSkill;
 
@@ -36,8 +37,10 @@ class ALostArkClassPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
-	bool isActiveSkill;
-	ABaseSkill* currentSkill;
+	bool IsActiveSkill;
+	bool IsPointingSkill;
+	ESkillIndex currentSkillKey;
+	ESkillType currentSkillType;
 	ABaseSkill* previousSkill;
 
 	TMap<ESkillIndex, ABaseSkill*> SelectedSkills;
@@ -90,7 +93,8 @@ public:
 	TArray<TSubclassOf<ABaseSkill>> AllSkills;
 
 	FActiveSkillDeleGate ActiveSkill;
-	FEndSkillDeleGate EndSkill;
+	FSkillDeleGate ReleaseSkill;
+	FSkillDeleGate CancelSkill;
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -118,8 +122,26 @@ protected:
 	void UseSkill_D();
 	void UseSkill_F();
 
+	void TriggeredSkill_Q();
+	void TriggeredSkill_W();
+	void TriggeredSkill_E();
+	void TriggeredSkill_R();
+	void TriggeredSkill_A();
+	void TriggeredSkill_S();
+	void TriggeredSkill_D();
+	void TriggeredSkill_F();
+
+	void CompletedSkill_Q();
+	void CompletedSkill_W();
+	void CompletedSkill_E();
+	void CompletedSkill_R();
+	void CompletedSkill_A();
+	void CompletedSkill_S();
+	void CompletedSkill_D();
+	void CompletedSkill_F();
+
 	UFUNCTION()
-	void SetCurSkill(ABaseSkill* CurSkill);
+	void UseSkill(ABaseSkill* Skill);
 
 	UFUNCTION()
 	void ActiveAttack();
@@ -128,6 +150,11 @@ private:
 
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+
+public:
+
+	UFUNCTION()
+	void EndSkill(ABaseSkill* Skill);
 };
 
 

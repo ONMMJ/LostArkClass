@@ -6,19 +6,31 @@
 #include "GameFramework/Actor.h"
 #include "BaseSkill.generated.h"
 
+UENUM(BlueprintType)
+enum class ESkillType
+{
+	Normal,
+	Charge,
+	Casting,
+	Point,
+	None,
+};
+
 UCLASS()
 class LOSTARKCLASS_API ABaseSkill : public AActor
 {
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
 	class ALostArkClassPlayerController* PlayerController;
 
 public:	
 	// Sets default values for this actor's properties
 	ABaseSkill();
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	ESkillType SkillType;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	bool IsReady;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
@@ -33,6 +45,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintNativeEvent)
+	void UseSkill();
+
 	UFUNCTION()
-	virtual void UseSkill(APawn* Player);
+	virtual bool ActiveSkill();
+	UFUNCTION(BlueprintCallable)
+	virtual void EndSkill();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void LookTarget();
 };

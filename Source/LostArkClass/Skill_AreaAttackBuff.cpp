@@ -10,6 +10,8 @@ ASkill_AreaAttackBuff::ASkill_AreaAttackBuff()
     // Set this actor to call Tick() every frame
     PrimaryActorTick.bCanEverTick = true;
 
+    SkillType = ESkillType::Point;
+
     // Create a root component
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
     SetRootComponent(RootComponent);
@@ -34,37 +36,39 @@ void ASkill_AreaAttackBuff::BeginPlay()
     // 다이나믹 머터리얼
     MaterialInstance = Plane_AttackRange->CreateDynamicMaterialInstance(0);
     InReach = true;
+    IsPlaying = false;
 
     SetActive_AttackRange(false);
 }
 
-void ASkill_AreaAttackBuff::UseSkill(APawn* Player)
+void ASkill_AreaAttackBuff::UseSkill_Implementation()
 {
+    Super::UseSkill_Implementation();
+
+    PlayerController->CancelSkill.Clear();
+    PlayerController->CancelSkill.BindDynamic(this, &ASkill_AreaAttackBuff::CancelSkill);
+
     SetActive_AttackRange(true);
-    Decal_MaxRange->SetWorldLocation(Player->GetActorLocation());
-
-    PlayerController->ActiveSkill.Clear();
-    PlayerController->ActiveSkill.BindDynamic(this, &ASkill_AreaAttackBuff::ActiveSkill);
-
-    PlayerController->EndSkill.Clear();
-    PlayerController->EndSkill.BindDynamic(this, &ASkill_AreaAttackBuff::EndSkill);
+    IsPlaying = true;
 }
 
 bool ASkill_AreaAttackBuff::ActiveSkill()
 {
-    if(InReach)
+    if (InReach)
     {
+        LookTarget();
         AAreaOfEffect* aoe = GetWorld()->SpawnActor<AAreaOfEffect>(SpawnActor);
         aoe->SetActorLocation(ObjectImpactPoint);
         SetActive_AttackRange(false);
-        return false;
+        EndSkill();
+        // IsSuccess
+        return true;
     }
-    return true;
+    return false;
 }
 
-void ASkill_AreaAttackBuff::EndSkill()
+void ASkill_AreaAttackBuff::CancelSkill()
 {
-    UE_LOG(LogTemp, Error, TEXT("fffffffffffffff"));
     SetActive_AttackRange(false);
 }
 
@@ -78,8 +82,19 @@ void ASkill_AreaAttackBuff::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    if (!IsPlaying)
+        return;
+
     if (PlayerController)
     {
+        // 범위 플레이어에 이동
+        APawn* player = PlayerController->GetPawn();
+        if (player)
+        {
+            FVector location = player->GetActorLocation();
+            SetActorLocation(location);
+        }
+
         // 마우스 위치 가져오기
         FVector2D MousePosition;
         PlayerController->GetMousePosition(MousePosition.X, MousePosition.Y);

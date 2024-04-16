@@ -2,6 +2,7 @@
 
 
 #include "BaseSkill.h"
+#include "Engine/Texture2D.h"
 #include "LostArkClassPlayerController.h"
 
 // Sets default values

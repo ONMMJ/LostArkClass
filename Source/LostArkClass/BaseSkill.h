@@ -30,6 +30,8 @@ public:
 	ABaseSkill();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	class UTexture2D* SkillIcon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	ESkillType SkillType;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	bool IsReady;

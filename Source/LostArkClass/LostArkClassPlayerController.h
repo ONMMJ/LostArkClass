@@ -19,7 +19,8 @@ DECLARE_DYNAMIC_DELEGATE(FSkillDeleGate);
 
 class ABaseSkill;
 
-enum class ESkillIndex
+UENUM(BlueprintType)
+enum class ESkillIndex : uint8
 {
 	Q = 0,
 	W,
@@ -43,10 +44,12 @@ class ALostArkClassPlayerController : public APlayerController
 	ESkillType currentSkillType;
 	ABaseSkill* previousSkill;
 
-	TMap<ESkillIndex, ABaseSkill*> SelectedSkills;
 public:
 	ALostArkClassPlayerController();
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	TMap<ESkillIndex, ABaseSkill*> SelectedSkills;
 
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)

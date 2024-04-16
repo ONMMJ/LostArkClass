@@ -41,7 +41,7 @@ void ALostArkClassPlayerController::BeginPlay()
 	int count = static_cast<int>(ESkillIndex::Count);
 	for (int i = 0; i < count; i++)
 	{
-		ABaseSkill* NewSkill = GetWorld()->SpawnActor<ABaseSkill>(*AllSkills[i]);
+		ABaseSkill* NewSkill = GetWorld()->SpawnActor<ABaseSkill>(AllSkills[i]);
 		if (NewSkill)
 		{
 			ESkillIndex key = static_cast<ESkillIndex>(i);
@@ -413,6 +413,7 @@ void ALostArkClassPlayerController::EndSkill(ABaseSkill* Skill)
 	previousSkill = Skill;
 	currentSkillType = ESkillType::None;
 }
+
 
 void ALostArkClassPlayerController::ActiveAttack()
 {

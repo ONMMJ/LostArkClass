@@ -15,5 +15,4 @@ class LOSTARKCLASS_API UItem_Normal_Adropin : public UItem_Normal
 	GENERATED_BODY()
 	
 public:
-	UItem_Normal_Adropin();
 };

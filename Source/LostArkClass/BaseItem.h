@@ -9,25 +9,22 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class LOSTARKCLASS_API UBaseItem : public UObject
 {
 	GENERATED_BODY()
 
 
 public:
-
-	FString FileName;
-
-	UPROPERTY()
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	UTexture2D* ItemIcon;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
+	FString test;
 
 	UPROPERTY()
 	int Count;
 
 	UFUNCTION(BlueprintNativeEvent)
     void UseItem();	
-
-	UFUNCTION()
-	void SetIconTexture();
 };

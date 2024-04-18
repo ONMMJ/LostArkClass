@@ -12,12 +12,6 @@ struct FIdentityItemInfo
 {
 	GENERATED_BODY()
 
-	FIdentityItemInfo() {
-		if (Item_Init)
-		{
-			Item = NewObject<UBaseItem>(Item_Init);
-		}
-	}
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UBaseItem> Item_Init;
@@ -27,6 +21,22 @@ public:
 	UPROPERTY()
 	UBaseItem* Item;
 
+	void Init()
+	{
+		if (Item_Init)
+		{
+			UE_LOG(LogTemp, Error, TEXT("@@@@@@@@@@@@@@@@@@@"));
+			Item = NewObject<UBaseItem>(Item_Init);
+			if (Item)
+			{
+				UE_LOG(LogTemp, Error, TEXT("True"));
+			}
+			else 
+			{
+				UE_LOG(LogTemp, Error, TEXT("False"));
+			}
+		}
+	}
 };
 
 UCLASS()
@@ -37,18 +47,31 @@ class LOSTARKCLASS_API ASkill_Identity : public ABaseSkill
 	const int MaxIdentity = 300;
 
 	int ItemNum = 0;
-	bool IsBuff = false;
 	FIdentityItemInfo* NowItem;
+	TArray<FIdentityItemInfo*> ItemList;
 public:
 	// Sets default values for this actor's properties
 	ASkill_Identity();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	UTexture2D* Test;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 	int Identity = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
-	TArray<FIdentityItemInfo> ItemList;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 
+	bool IsBuff = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	TArray<FIdentityItemInfo> ItemList_Init;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UBaseItem> Test_Init;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UBaseItem* Test_Item;
 
 protected:
 	// Called when the game starts or when spawned
@@ -68,5 +91,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Click_Z_Button();
 	UFUNCTION(BlueprintCallable)
-	void Click_Y_Button();
+	void Click_X_Button();
+
+	UFUNCTION(BlueprintCallable)
+	UTexture2D* GetItemIcon();
 };

@@ -6,6 +6,7 @@
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "BaseSkill.h"
+#include "Skill_Identity.h"
 #include "LostArkClassPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -50,6 +51,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 	TMap<ESkillIndex, ABaseSkill*> SelectedSkills;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	ASkill_Identity* IdentitySkill;
 
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -92,8 +95,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInput", meta = (AllowPrivateAccess = "true"))
 	UInputAction* SetActionSkill_F;
 
+	// Identity
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInput", meta = (AllowPrivateAccess = "true"))
+	UInputAction* SetActionIdentity_Z;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInput", meta = (AllowPrivateAccess = "true"))
+	UInputAction* SetActionIdentity_X;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<ABaseSkill>> AllSkills;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ASkill_Identity> Identity_Init;
 
 	FActiveSkillDeleGate ActiveSkill;
 	FSkillDeleGate ReleaseSkill;
@@ -142,6 +153,10 @@ protected:
 	void CompletedSkill_S();
 	void CompletedSkill_D();
 	void CompletedSkill_F();
+
+	//Identity
+	void UseIdentity_Z();
+	void UseIdentity_X();
 
 	UFUNCTION()
 	void UseSkill(ABaseSkill* Skill);

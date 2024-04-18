@@ -48,6 +48,11 @@ void ALostArkClassPlayerController::BeginPlay()
 			SelectedSkills.Add(key, NewSkill);
 		}
 	}
+	ASkill_Identity* NewIdentity = GetWorld()->SpawnActor<ASkill_Identity>(Identity_Init);
+	if (NewIdentity)
+	{
+		IdentitySkill = NewIdentity;
+	}
 }
 
 void ALostArkClassPlayerController::SetupInputComponent()
@@ -97,6 +102,10 @@ void ALostArkClassPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(SetActionSkill_S, ETriggerEvent::Completed, this, &ALostArkClassPlayerController::CompletedSkill_S);
 		EnhancedInputComponent->BindAction(SetActionSkill_D, ETriggerEvent::Completed, this, &ALostArkClassPlayerController::CompletedSkill_D);
 		EnhancedInputComponent->BindAction(SetActionSkill_F, ETriggerEvent::Completed, this, &ALostArkClassPlayerController::CompletedSkill_F);
+
+		// Identity
+		EnhancedInputComponent->BindAction(SetActionIdentity_Z, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseIdentity_Z);
+		EnhancedInputComponent->BindAction(SetActionIdentity_X, ETriggerEvent::Started, this, &ALostArkClassPlayerController::UseIdentity_X);
 
 		// Attack
 		EnhancedInputComponent->BindAction(SetActionAttack, ETriggerEvent::Started, this, &ALostArkClassPlayerController::ActiveAttack);
@@ -369,6 +378,19 @@ void ALostArkClassPlayerController::CompletedSkill_F()
 		if (currentSkillType == ESkillType::Charge || currentSkillType == ESkillType::Casting)
 			ReleaseSkill.Execute();
 	}
+}
+
+void ALostArkClassPlayerController::UseIdentity_Z()
+{
+	IdentitySkill->Click_Z_Button();
+}
+
+void ALostArkClassPlayerController::UseIdentity_X()
+{
+	if (IsActiveSkill)
+		return;
+
+	IdentitySkill->Click_X_Button();
 }
 
 void ALostArkClassPlayerController::UseSkill(ABaseSkill* Skill)

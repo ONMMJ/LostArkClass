@@ -4,18 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "AreaOfEffect.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FHitEnemy);
+#include "OtherPlayer.generated.h"
 
 UCLASS()
-class LOSTARKCLASS_API AAreaOfEffect : public AActor
+class LOSTARKCLASS_API AOtherPlayer : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AAreaOfEffect();
+	AOtherPlayer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,9 +23,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(BlueprintAssignable)
-	FHitEnemy HitEnemyDelegate;
-
-	UFUNCTION(BlueprintCallable)
-	void TriggerHitEnemy();
 };

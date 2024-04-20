@@ -59,6 +59,7 @@ bool ASkill_AreaAttackBuff::ActiveSkill()
         LookTarget();
         AAreaOfEffect* aoe = GetWorld()->SpawnActor<AAreaOfEffect>(SpawnActor);
         aoe->SetActorLocation(ObjectImpactPoint);
+        aoe->HitEnemyDelegate.AddDynamic(this, &ASkill_AreaAttackBuff::HitEnemy);
         SetActive_AttackRange(false);
         EndSkill();
         // IsSuccess

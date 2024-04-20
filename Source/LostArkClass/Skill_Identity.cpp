@@ -8,35 +8,52 @@ ASkill_Identity::ASkill_Identity()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	BuffArea = CreateDefaultSubobject<USphereComponent>(TEXT("BuffArea"));
+	BuffArea->InitSphereRadius(50.0f); // 반지름 설정
+	BuffArea->SetCollisionProfileName(TEXT("BuffArea")); // 충돌 프로필 설정
+	BuffArea->SetupAttachment(RootComponent); // 루트에 연결되도록 설정
 }
 
 void ASkill_Identity::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<FIdentityItemInfo> infoList = static_cast<TArray<FIdentityItemInfo>>(ItemList_Init);
-	for (FIdentityItemInfo ItemInfo : infoList)
+	for (TSubclassOf<UBaseItem> Item_Init : ItemList_Init)
 	{
-		ItemList.Add(&ItemInfo);
-	}
-
-	for (FIdentityItemInfo* ItemInfo : ItemList)
-	{
-		ItemInfo->Init();
+		ItemList.Add(NewObject<UBaseItem>(this, Item_Init));
 	}
 
 	if (ItemList.Num() > 0)
 	{
 		NowItem = ItemList[ItemNum];
 	}
-
-	Test_Item = NewObject<UBaseItem>(Test_Init);
-	UE_LOG(LogTemp, Error, TEXT("@@@@@@%s"), *Test_Item->test)
+	else
+	{
+		NowItem = nullptr;
+	}
 }
 
 void ASkill_Identity::UseSkill_Implementation()
 {
 	Super::UseSkill_Implementation();
+}
+
+void ASkill_Identity::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AOtherPlayer* OtherPlayer = Cast<AOtherPlayer>(OtherActor);
+	if (OtherPlayer)
+	{
+		PlayerListInBuffArea.Add(OtherPlayer);
+	}
+}
+
+void ASkill_Identity::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AOtherPlayer* OtherPlayer = Cast<AOtherPlayer>(OtherActor);
+	if (OtherPlayer)
+	{
+		PlayerListInBuffArea.Remove(OtherPlayer);
+	}
 }
 
 void ASkill_Identity::Tick(float DeltaTime)
@@ -92,31 +109,4 @@ void ASkill_Identity::Click_X_Button()
 	{
 		//아이템분배
 	}
-}
-
-UTexture2D* ASkill_Identity::GetItemIcon()
-{
-	if (IsBuff)
-	{
-		return SkillIcon;
-	}
-	else
-	{
-		if (NowItem)
-		{
-			//UE_LOG(LogTemp, Error, TEXT("NowItem"));
-			if (NowItem->Item)
-			{
-				UE_LOG(LogTemp, Error, TEXT("@@@@@@%s"), *Test_Item->test)
-				//UE_LOG(LogTemp, Error, TEXT("NowItem->Item"));
-				/*if (NowItem->Item->ItemIcon)
-				{
-					UE_LOG(LogTemp, Error, TEXT("NowItem->Item->ItemIcon"));
-					return NowItem->Item->ItemIcon;
-				}*/
-
-			}
-		}
-	}
-	return nullptr;
 }

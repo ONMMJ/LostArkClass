@@ -74,10 +74,28 @@ void ABaseSkill::LookTarget()
 void ABaseSkill::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!IsReady)
-	{
-		NowCoolDown -= DeltaTime;
-		if (NowCoolDown <= 0)
-			IsReady = true;
-	}
+    if (IsStack)
+    {
+        if (StackCount<2)
+        {
+            NowCoolDown -= DeltaTime;
+            if (NowCoolDown <= 0)
+                StackCount++;
+            if (StackCount > 0)
+                IsReady = true;
+        }
+    }
+    else
+    {
+        if (!IsReady)
+        {
+            NowCoolDown -= DeltaTime;
+            if (NowCoolDown <= 0)
+                IsReady = true;
+        }
+    }
+}
+void ABaseSkill::HitEnemy()
+{
+    PlayerController->IdentitySkill->AddIdentity(IdentityAmount);
 }

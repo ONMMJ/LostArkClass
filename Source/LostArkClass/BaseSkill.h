@@ -33,8 +33,14 @@ public:
 	class UTexture2D* SkillIcon;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	ESkillType SkillType;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	int IdentityAmount = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	bool IsStack = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	bool IsReady;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	int StackCount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	float NowCoolDown;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
@@ -57,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void LookTarget();
+
+	UFUNCTION(BlueprintCallable)
+	void HitEnemy();
 };

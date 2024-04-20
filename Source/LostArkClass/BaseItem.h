@@ -20,7 +20,7 @@ public:
 	UTexture2D* ItemIcon;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
-	FString test;
+	int BubbleCount;
 
 	UPROPERTY()
 	int Count;

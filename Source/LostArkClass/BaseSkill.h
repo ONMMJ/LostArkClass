@@ -66,4 +66,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HitEnemy();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetCooldown();
 };

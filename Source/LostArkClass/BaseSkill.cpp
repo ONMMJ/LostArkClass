@@ -18,6 +18,7 @@ void ABaseSkill::BeginPlay()
 {
 	Super::BeginPlay();
 	IsReady = true;
+    StackCount = 2;
 	// PlayerController 가져오기
 	PlayerController = Cast<ALostArkClassPlayerController>(GetWorld()->GetFirstPlayerController());
 }
@@ -66,8 +67,33 @@ void ABaseSkill::LookTarget()
         FRotator Rotation = FRotationMatrix::MakeFromX(Direction).Rotator();
         player->SetActorRotation(Rotation);
     }
-    NowCoolDown = MaxCoolDown;
-    IsReady = false;
+    if (IsStack)
+    {
+        if(StackCount == 2)
+            NowCoolDown = MaxCoolDown;
+        StackCount--;
+        if (StackCount > 0)
+            IsReady = true;
+        else
+            IsReady = false;
+    }
+    else
+    {
+        IsReady = false;
+        NowCoolDown = MaxCoolDown;
+    }
+}
+
+void ABaseSkill::ResetCooldown()
+{
+    if (IsStack)
+    {
+        if (StackCount < 2)
+        {
+            StackCount++;
+        }
+    }
+    IsReady = true;
 }
 
 // Called every frame
@@ -80,7 +106,10 @@ void ABaseSkill::Tick(float DeltaTime)
         {
             NowCoolDown -= DeltaTime;
             if (NowCoolDown <= 0)
+            {
                 StackCount++;
+                NowCoolDown = MaxCoolDown;
+            }
             if (StackCount > 0)
                 IsReady = true;
         }

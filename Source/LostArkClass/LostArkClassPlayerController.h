@@ -43,12 +43,13 @@ class ALostArkClassPlayerController : public APlayerController
 	bool IsPointingSkill;
 	ESkillIndex currentSkillKey;
 	ESkillType currentSkillType;
-	ABaseSkill* previousSkill;
 
 public:
 	ALostArkClassPlayerController();
 
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	ABaseSkill* previousSkill;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 	TMap<ESkillIndex, ABaseSkill*> SelectedSkills;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))

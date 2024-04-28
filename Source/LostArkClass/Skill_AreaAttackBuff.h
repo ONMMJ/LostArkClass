@@ -15,6 +15,7 @@ class LOSTARKCLASS_API ASkill_AreaAttackBuff : public ABaseSkill
 	class USceneComponent* RootComponent;
 	class UMaterialInstanceDynamic* MaterialInstance;
 	FVector ObjectImpactPoint;
+	FVector SkillSpawnPoint;
 	bool InReach;
 	bool IsPlaying;
 public:
@@ -47,4 +48,6 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnSkill() override;
 };

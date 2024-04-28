@@ -57,11 +57,9 @@ bool ASkill_AreaAttackBuff::ActiveSkill()
     if (InReach)
     {
         LookTarget();
-        AAreaOfEffect* aoe = GetWorld()->SpawnActor<AAreaOfEffect>(SpawnActor);
-        aoe->SetActorLocation(ObjectImpactPoint);
-        aoe->HitEnemyDelegate.AddDynamic(this, &ASkill_AreaAttackBuff::HitEnemy);
+        SkillSpawnPoint = ObjectImpactPoint;
+        PlayAnimation();
         SetActive_AttackRange(false);
-        EndSkill();
         // IsSuccess
         return true;
     }
@@ -128,4 +126,11 @@ void ASkill_AreaAttackBuff::Tick(float DeltaTime)
             }
         }
     }
+}
+
+void ASkill_AreaAttackBuff::OnSkill()
+{
+    AAreaOfEffect* aoe = GetWorld()->SpawnActor<AAreaOfEffect>(SpawnActor);
+    aoe->SetActorLocation(SkillSpawnPoint);
+    aoe->HitEnemyDelegate.AddDynamic(this, &ASkill_AreaAttackBuff::HitEnemy);
 }

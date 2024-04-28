@@ -30,6 +30,8 @@ public:
 	ABaseSkill();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
+	UAnimMontage* SkillAnimation;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	class UTexture2D* SkillIcon;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillInfo")
 	ESkillType SkillType;
@@ -69,4 +71,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ResetCooldown();
+
+	UFUNCTION(BlueprintCallable)
+	void PlayAnimation();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void OnSkill();
 };

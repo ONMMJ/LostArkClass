@@ -3,6 +3,7 @@
 
 #include "BaseSkill.h"
 #include "Engine/Texture2D.h"
+#include "GameFramework/Character.h"
 #include "LostArkClassPlayerController.h"
 
 // Sets default values
@@ -32,6 +33,7 @@ void ABaseSkill::UseSkill_Implementation()
 bool ABaseSkill::ActiveSkill()
 {
 	return false;
+
 }
 
 void ABaseSkill::EndSkill()
@@ -127,4 +129,17 @@ void ABaseSkill::Tick(float DeltaTime)
 void ABaseSkill::HitEnemy()
 {
     PlayerController->IdentitySkill->AddIdentity(IdentityAmount);
+}
+void ABaseSkill::PlayAnimation()
+{
+    ACharacter* Player = Cast<ACharacter>(PlayerController->GetCharacter());
+    if (Player)
+        if (SkillAnimation)
+        {
+            PlayerController->StopMovement();
+            Player->PlayAnimMontage(SkillAnimation);
+        }
+}
+void ABaseSkill::OnSkill()
+{
 }

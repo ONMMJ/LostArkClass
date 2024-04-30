@@ -75,6 +75,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayAnimation();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void OnSkill();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void OnSkill();
 };

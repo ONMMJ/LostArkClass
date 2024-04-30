@@ -31,6 +31,8 @@ class LOSTARKCLASS_API ASkill_Identity : public ABaseSkill
 	const int MaxIdentity = 300;
 
 	int ItemNum = 0;
+
+	bool IsActive;
 public:
 	// Sets default values for this actor's properties
 	ASkill_Identity();
@@ -65,6 +67,7 @@ protected:
 
 	// ABaseSkill을(를) 통해 상속됨
 	virtual void UseSkill_Implementation() override;
+	virtual void OnSkill_Implementation() override;
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

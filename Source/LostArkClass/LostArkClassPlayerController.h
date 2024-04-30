@@ -6,6 +6,7 @@
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "BaseSkill.h"
+#include "BaseItem.h"
 #include "Skill_Identity.h"
 #include "LostArkClassPlayerController.generated.h"
 
@@ -48,6 +49,15 @@ public:
 	ALostArkClassPlayerController();
 
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Test", meta = (AllowPrivateAccess = "true"))
+	bool IsTestOn = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Test", meta = (AllowPrivateAccess = "true"))
+	float TestCount = 8.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item", meta = (AllowPrivateAccess = "true"))
+	UBaseItem* IdentityItem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
+	ABaseSkill* currentSkill;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
 	ABaseSkill* previousSkill;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
@@ -171,7 +181,7 @@ private:
 	float FollowTime; // For how long it has been pressed
 
 public:
-
+	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	void EndSkill(ABaseSkill* Skill);
 };

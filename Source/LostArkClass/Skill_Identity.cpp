@@ -2,6 +2,7 @@
 
 
 #include "Skill_Identity.h"
+#include "LostArkClassPlayerController.h"
 
 ASkill_Identity::ASkill_Identity()
 {
@@ -18,6 +19,7 @@ void ASkill_Identity::BeginPlay()
 {
 	Super::BeginPlay();
 
+	IsActive = false;
 	for (TSubclassOf<UBaseItem> Item_Init : ItemList_Init)
 	{
 		ItemList.Add(NewObject<UBaseItem>(this, Item_Init));
@@ -37,6 +39,7 @@ void ASkill_Identity::UseSkill_Implementation()
 {
 	Super::UseSkill_Implementation();
 }
+
 
 void ASkill_Identity::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -103,10 +106,32 @@ void ASkill_Identity::Click_X_Button()
 {
 	if (IsBuff)
 	{
-		//버프
+		if (UseIdentity(2))
+		{
+			IsActive = true;
+			PlayAnimation();
+		}
 	}
 	else
 	{
-		//아이템분배
+		if (UseIdentity(NowItem->BubbleCount))
+		{
+			IsActive = true;
+			PlayAnimation();
+		}
+	}
+}
+
+void ASkill_Identity::OnSkill_Implementation()
+{
+	if (IsBuff)
+	{
+	}
+	else
+	{
+		if (PlayerController)
+		{
+			PlayerController->IdentityItem = NowItem;
+		}
 	}
 }

@@ -17,24 +17,23 @@ ASkill_AreaAttackBuff::ASkill_AreaAttackBuff()
     SetRootComponent(RootComponent);
 
     // Create and attach decal component
-    Decal_MaxRange = CreateDefaultSubobject<UDecalComponent>(TEXT("MaxRange"));
-    Decal_MaxRange->SetupAttachment(RootComponent);
-    Decal_MaxRange->DecalSize = FVector(1000.0f, 1000.0f, 1000.0f);
-    Decal_MaxRange->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f)); // Optional: rotate the decal
-    Decal_MaxRange->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Optional: adjust the decal's position
+    Decal_MaxRange1 = CreateDefaultSubobject<UDecalComponent>(TEXT("MaxRange"));
+    Decal_MaxRange1->SetupAttachment(RootComponent);
+    Decal_MaxRange1->DecalSize = FVector(1000.0f, 1000.0f, 1000.0f);
+    Decal_MaxRange1->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f)); // Optional: rotate the decal
+    Decal_MaxRange1->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Optional: adjust the decal's position
     
     // 스태틱 메쉬 컴포넌트 생성 및 설정
-    Plane_AttackRange = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AttackRange"));
-    Plane_AttackRange->SetupAttachment(RootComponent);
+    Plane_AttackRange1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AttackRange"));
+    Plane_AttackRange1->SetupAttachment(RootComponent);
 
 }
 
 void ASkill_AreaAttackBuff::BeginPlay()
 {
 	Super::BeginPlay();
-
     // 다이나믹 머터리얼
-    MaterialInstance = Plane_AttackRange->CreateDynamicMaterialInstance(0);
+    MaterialInstance = Plane_AttackRange1->CreateDynamicMaterialInstance(0);
     InReach = true;
     IsPlaying = false;
 
@@ -73,8 +72,8 @@ void ASkill_AreaAttackBuff::CancelSkill()
 
 void ASkill_AreaAttackBuff::SetActive_AttackRange(bool IsActive)
 {
-    Decal_MaxRange->SetHiddenInGame(!IsActive);
-    Plane_AttackRange->SetHiddenInGame(!IsActive);
+    Decal_MaxRange1->SetHiddenInGame(!IsActive);
+    Plane_AttackRange1->SetHiddenInGame(!IsActive);
 }
 
 void ASkill_AreaAttackBuff::Tick(float DeltaTime)
@@ -109,12 +108,12 @@ void ASkill_AreaAttackBuff::Tick(float DeltaTime)
             ObjectImpactPoint = HitResult.ImpactPoint;
             ObjectImpactPoint.Z = ObjectImpactPoint.Z;
             // 데칼 컴포넌트 위치 업데이트
-            if (Plane_AttackRange)
+            if (Plane_AttackRange1)
             {
-                Plane_AttackRange->SetWorldLocation(ObjectImpactPoint);
+                Plane_AttackRange1->SetWorldLocation(ObjectImpactPoint);
 
-                FVector Center = Decal_MaxRange->GetRelativeLocation();
-                FVector Attack = Plane_AttackRange->GetRelativeLocation();
+                FVector Center = Decal_MaxRange1->GetRelativeLocation();
+                FVector Attack = Plane_AttackRange1->GetRelativeLocation();
                 Center.Z = 0;
                 Attack.Z = 0;
                 double distance = FVector::Distance(Center, Attack);
@@ -128,7 +127,7 @@ void ASkill_AreaAttackBuff::Tick(float DeltaTime)
     }
 }
 
-void ASkill_AreaAttackBuff::OnSkill()
+void ASkill_AreaAttackBuff::OnSkill_Implementation()
 {
     AAreaOfEffect* aoe = GetWorld()->SpawnActor<AAreaOfEffect>(SpawnActor);
     aoe->SetActorLocation(SkillSpawnPoint);

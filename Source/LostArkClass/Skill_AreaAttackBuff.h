@@ -24,10 +24,10 @@ public:
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Range")
-	class UDecalComponent* Decal_MaxRange;
+	class UDecalComponent* Decal_MaxRange1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Range")
-	class UStaticMeshComponent* Plane_AttackRange;
+	class UStaticMeshComponent* Plane_AttackRange1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	TSubclassOf<AAreaOfEffect> SpawnActor;
@@ -37,6 +37,7 @@ protected:
 
 	// ABaseSkill을(를) 통해 상속됨
 	virtual void UseSkill_Implementation() override;
+	virtual void OnSkill_Implementation() override;
 
 	bool ActiveSkill() override;
 	UFUNCTION()
@@ -48,6 +49,4 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void OnSkill() override;
 };

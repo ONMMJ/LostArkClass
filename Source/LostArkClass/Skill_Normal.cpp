@@ -23,6 +23,11 @@ void ASkill_Normal::UseSkill_Implementation()
 	Super::UseSkill_Implementation();
 }
 
+void ASkill_Normal::OnSkill_Implementation()
+{
+	Super::OnSkill_Implementation();
+}
+
 // Called every frame
 void ASkill_Normal::Tick(float DeltaTime)
 {

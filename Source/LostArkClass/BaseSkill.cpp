@@ -140,6 +140,6 @@ void ABaseSkill::PlayAnimation()
             Player->PlayAnimMontage(SkillAnimation);
         }
 }
-void ABaseSkill::OnSkill()
+void ABaseSkill::OnSkill_Implementation()
 {
 }

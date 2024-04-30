@@ -16,6 +16,7 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ALostArkClassPlayerController::ALostArkClassPlayerController()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
@@ -118,6 +119,8 @@ void ALostArkClassPlayerController::SetupInputComponent()
 
 void ALostArkClassPlayerController::OnInputStarted()
 {
+	if (IsActiveSkill)
+		return;
 	StopMovement();
 	if (IsPointingSkill)
 	{
@@ -129,6 +132,8 @@ void ALostArkClassPlayerController::OnInputStarted()
 // Triggered every frame when the input is held down
 void ALostArkClassPlayerController::OnSetDestinationTriggered()
 {
+	if (IsActiveSkill)
+		return;
 	// We flag that the input is being pressed
 	FollowTime += GetWorld()->GetDeltaSeconds();
 	
@@ -161,6 +166,8 @@ void ALostArkClassPlayerController::OnSetDestinationTriggered()
 
 void ALostArkClassPlayerController::OnSetDestinationReleased()
 {
+	if (IsActiveSkill)
+		return;
 	// If it was a short press
 	if (FollowTime <= ShortPressThreshold)
 	{
@@ -390,6 +397,7 @@ void ALostArkClassPlayerController::UseIdentity_X()
 	if (IsActiveSkill)
 		return;
 
+	currentSkill = IdentitySkill;
 	IdentitySkill->Click_X_Button();
 }
 
@@ -400,6 +408,7 @@ void ALostArkClassPlayerController::UseSkill(ABaseSkill* Skill)
 
 	if (Skill->IsReady)
 	{
+		currentSkill = Skill;
 		if (IsPointingSkill)
 		{
 			CancelSkill.Execute();
@@ -429,6 +438,19 @@ void ALostArkClassPlayerController::UseSkill(ABaseSkill* Skill)
 	}
 }
 
+void ALostArkClassPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (IsTestOn)
+	{
+		TestCount -= DeltaTime;
+		if (TestCount <= 0.f) {
+			IsTestOn = false;
+		}
+	}
+}
+
 void ALostArkClassPlayerController::EndSkill(ABaseSkill* Skill)
 {
 	IsActiveSkill = false;
@@ -444,6 +466,7 @@ void ALostArkClassPlayerController::ActiveAttack()
 		bool IsSuccess = ActiveSkill.Execute();
 		if (IsSuccess) 
 		{
+			IsActiveSkill = true;
 			IsPointingSkill = false;
 		}
 		

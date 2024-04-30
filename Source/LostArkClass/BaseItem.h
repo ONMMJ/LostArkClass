@@ -21,6 +21,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Info")
 	int BubbleCount;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Info")
+	float Cooldown = 5;
 
 	UPROPERTY()
 	int Count;

@@ -21,7 +21,7 @@ protected:
 
 	// ABaseSkill을(를) 통해 상속됨
 	virtual void UseSkill_Implementation() override;
-
+	virtual void OnSkill_Implementation() override;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
